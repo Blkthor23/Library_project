@@ -15,48 +15,73 @@ function getTotalAccountsCount(accounts) {
 }
 
 function getBooksBorrowedCount(books) {
-  let sum = 0
+  let sum = 0;
   //iterating over the books object
- books.forEach(book => {
-   //creates a constant variable of counter
-  const counter = book.borrows.reduce((count, item) => {
-    if(item.returned === false){
-      //for each instance adds one to the count
-      count += 1
-      return count
-    }else{
-      //console.log("or", count)
-      return count
-    }
-  }, 0)
-sum += counter})
-return sum
+  books.forEach((book) => {
+    //creates a constant variable of counter
+    const counter = book.borrows.reduce((count, item) => {
+      if (item.returned === false) {
+        //for each instance adds one to the count
+        count += 1;
+        return count;
+      } else {
+        //console.log("or", count)
+        return count;
+      }
+    }, 0);
+    sum += counter;
+  });
+  return sum;
 }
 
 function getMostCommonGenres(books) {
-  let sum = 0 
-  let result = []
-  let item = books.forEach(book => {
-    const createdObj = books.reduce((acc, book)=>{
-      if(acc[book.genre]){
-          acc.push({count: acc.length})
-      } else{
-          acc = {
-            name: `${book.genre}`,
-          };
-      }
-      return acc;
-    },{})
-  })
-  console.log(item)
+  const mapper = books.reduce((count, book) => {
+    if (count[book.genre]) {
+      count[book.genre] += 1;
+    } else {
+      count[book.genre] = 1;
+    }
+    return count;
+  }, []);
+  const genre = Object.keys(mapper).map((key) => ({
+    name: key,
+    count: mapper[key],
+  }));
+  return genre
+    .sort((bookA, bookB) => (bookA.count < bookB.count ? 1 : -1))
+    .slice(0, 5);
 }
 
 function getMostPopularBooks(books) {
+  let result = [];
+  books.forEach((book) => {
+    result.push({ name: book.title, count: book.borrows.length });
+  });
 
+  return result
+    .sort((bookA, bookB) => (bookA.count < bookB.count ? 1 : -1))
+    .slice(0, 5);
 }
 
 function getMostPopularAuthors(books, authors) {
-
+  let result = [];
+  let sum = 0
+  
+  for(let author of authors){
+      let creators ={
+        name: `${author.name.first} ${author.name.last}`,
+        count: sum
+      }
+      for(let book of books){
+      if(author.id === book.authorId){
+        creators.count += book.borrows.length
+        } 
+      }
+      result.push(creators)
+  }
+  
+  console.log(result)
+  return result.sort((authorA, authorB) => authorA.count  <         authorB.count ? 1:-1).slice(0, 5)
 }
 
 module.exports = {

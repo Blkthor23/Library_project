@@ -34,16 +34,18 @@ function getBooksPossessedByAccount(account, books, authors) {
 //must return an array of objects
 //Books that count are only the ones checked out by the given account 
 //the author object is nested inside the book object
-
-for(let book of books.borrows){
-  if(book[0].id === account.id && !book.returned){
-
-    return [item, record]
+return books.reduce((item, book) => {
+  if(!book.borrows[0].returned && book.borrows[0].id === account.id){
+    book.author = authors.find((author) => {
+      if(author.id === book.authorId){
+        return item.push(book)
+      }
+    })
   }
+  return item
+}, [])
 }
-console.log(checkedOut)
-return [checkedOut]
-}
+
 module.exports = {
   findAccountById,
   sortAccountsByLastName,

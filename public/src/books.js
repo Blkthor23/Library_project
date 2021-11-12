@@ -14,15 +14,22 @@ function partitionBooksByBorrowedStatus(books) {
 
 
 function getBorrowersForBook(book, accounts) {
-  //must return an
-  
-  let result = []
-  for (let i = 0; i < 10 && book.borrows.length; i++){
-    result.push(findAuthorById(accounts, book.borrows[i].id)
-    )
+  //must return an array of accounts with the length 10 or less
+  // each account object should include the `returned` entry from the corresponding transaction object in the `borrows` array
+  let list = [] 
+   for(let i = 0; i < book.borrows.length; i++){
+    let finder = accounts.find((account) => {
+      if(book.borrows[i].id === account.id){
+        return account
+        
+      }
+    })
+    finder.returned = book.borrows[i].returned
+    list.push(finder)
   }
-  return result
-}
+
+  return list.slice(0, 10)
+  }
 
 module.exports = {
   findAuthorById,
