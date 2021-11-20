@@ -7,11 +7,8 @@ function getTotalBooksCount(books) {
 }
 
 function getTotalAccountsCount(accounts) {
-  if (!accounts) {
-    return 0;
-  }
-
-  return accounts.length;
+    //Used the getTotalBooksCount as a helper function  
+    return getTotalBooksCount(accounts)
 }
 
 function getBooksBorrowedCount(books) {
@@ -79,9 +76,7 @@ function getMostPopularAuthors(books, authors) {
       }
       result.push(creators)
   }
-  
-  console.log(result)
-  return result.sort((authorA, authorB) => authorA.count  <         authorB.count ? 1:-1).slice(0, 5)
+  return result.sort((authorA, authorB) => authorA.count  < authorB.count ? 1:-1).slice(0, 5)
 }
 
 module.exports = {
